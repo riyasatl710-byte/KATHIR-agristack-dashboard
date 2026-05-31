@@ -1,6 +1,6 @@
 /**
  * ============================================================
- * Agristack Dashboard — Main Application
+ * KATHIR Dashboard — Main Application
  * ============================================================
  * Orchestrates state management, event handling, API calls,
  * and UI rendering for the entire dashboard.
@@ -12,6 +12,7 @@ const App = {
 
   state: {
     modules: [],
+    subModules: [],
     payments: [],
     currentFilter: 'All',
     currentModule: null,
@@ -23,12 +24,12 @@ const App = {
   async init() {
     this.setupEventListeners();
 
-    const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+    const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' || !CONFIG.APPS_SCRIPT_URL;
 
     if (isDemo) {
-      // Load demo data immediately
       const data = this.loadDemoData();
       this.state.modules = data.modules;
+      this.state.subModules = data.subModules;
       this.state.payments = data.payments;
       this.renderDashboard();
       this.hideLoading();
@@ -37,6 +38,7 @@ const App = {
       try {
         const data = await ApiService.fetchData();
         this.state.modules = data.modules || [];
+        this.state.subModules = data.subModules || [];
         this.state.payments = data.payments || [];
         this.renderDashboard();
         this.hideLoading();
@@ -47,6 +49,7 @@ const App = {
         // Fall back to demo data
         const data = this.loadDemoData();
         this.state.modules = data.modules;
+        this.state.subModules = data.subModules;
         this.state.payments = data.payments;
         this.renderDashboard();
       }
@@ -62,101 +65,242 @@ const App = {
           Module_ID: 'MOD_1',
           Module_Name: 'Geoportal',
           Type: 'Core',
-          Scope_Requirements: 'Interactive GIS-based mapping platform for agricultural land parcels. Includes satellite imagery integration, cadastral map overlays, crop pattern visualization, and administrative boundary layers. Supports WMS/WFS protocols and integrates with ISRO Bhuvan APIs.',
+          Scope_Requirements: 'Interactive GIS-based mapping platform for agricultural land parcels. Includes satellite imagery integration, cadastral map overlays, crop pattern visualization, and administrative boundary layers.',
           UAT_Status: 'Completed',
           UAT_Date: '2026-04-15',
-          UAT_Image_URLs: 'https://placehold.co/400x300/0F766E/white?text=Geoportal+Map,https://placehold.co/400x300/065F46/white?text=Layer+Controls',
+          UAT_Image_URLs: '',
           Current_Blockers: '',
-          IT_Cell_Last_Action: 'Final UAT sign-off completed. Performance optimized for 50K concurrent users.',
-          Sub_Modules: '• Interactive Map Interface\n• Layer Management Component\n• Cadastral Map Vectorization Module\n• GIS Database Connector',
-          Mapped_Milestone: 'OPEX Phase 1'
+          IT_Cell_Last_Action: 'Final UAT sign-off completed.',
+          Mapped_Milestone: 'Milestone 5 - Module-Wise UAT Release (60% CAPEX)',
+          Allocated_Amount: 1500000
         },
         {
           Module_ID: 'MOD_2',
           Module_Name: 'AI Field Boundary Detection',
           Type: 'AI',
-          Scope_Requirements: 'Deep learning model for automatic delineation of agricultural field boundaries from high-resolution satellite imagery (Sentinel-2, Planet Labs). Uses U-Net architecture with attention mechanisms. Target accuracy: 92% IoU on Indian farmland datasets.',
+          Scope_Requirements: 'Deep learning model for automatic delineation of agricultural field boundaries from high-resolution satellite imagery (Sentinel-2). Target accuracy: 92% IoU.',
           UAT_Status: 'In Progress',
           UAT_Date: '2026-05-20',
-          UAT_Image_URLs: 'https://placehold.co/400x300/8B5CF6/white?text=AI+Boundary+Detection',
-          Current_Blockers: 'Model accuracy at 88% IoU — needs improvement on fragmented holdings in hilly terrain. Additional training data from North-East India required.',
-          IT_Cell_Last_Action: 'Initiated data collection from Meghalaya and Mizoram. GPU cluster allocated for retraining.',
-          Sub_Modules: '• Satellite Imagery API Downloader\n• U-Net Boundary Detection Model\n• Vector Delineation Optimizer',
-          Mapped_Milestone: 'OPEX Phase 2'
+          UAT_Image_URLs: '',
+          Current_Blockers: 'Model accuracy at 88% IoU — needs improvement on fragmented holdings.',
+          IT_Cell_Last_Action: 'Initiated data collection from North-East India.',
+          Mapped_Milestone: 'Milestone 5 - Module-Wise UAT Release (60% CAPEX)',
+          Allocated_Amount: 1200000
         },
         {
           Module_ID: 'MOD_3',
           Module_Name: 'Unified Farmer Database',
           Type: 'Core',
-          Scope_Requirements: 'Centralized registry linking Aadhaar-authenticated farmer profiles with land records, bank accounts, and scheme enrollment data. Supports deduplication, family linkage, and multi-state federation. GDPR-compliant data governance framework.',
+          Scope_Requirements: 'Centralized registry linking Aadhaar-authenticated farmer profiles with land records, bank accounts, and scheme enrollment data.',
           UAT_Status: 'Completed',
           UAT_Date: '2026-03-28',
-          UAT_Image_URLs: 'https://placehold.co/400x300/059669/white?text=Farmer+Database,https://placehold.co/400x300/0F766E/white?text=Search+Interface',
+          UAT_Image_URLs: '',
           Current_Blockers: '',
-          IT_Cell_Last_Action: 'Database migrated to production. 12.3 million farmer records verified and linked.'
+          IT_Cell_Last_Action: 'Database migrated to production. 12.3 million farmer records verified.',
+          Mapped_Milestone: 'Milestone 5 - Module-Wise UAT Release (60% CAPEX)',
+          Allocated_Amount: 1500000
         },
         {
           Module_ID: 'MOD_4',
           Module_Name: 'Crop Survey Module',
           Type: 'Core',
-          Scope_Requirements: 'Mobile-first crop cutting experiment (CCE) digitization platform. Offline-capable Android app for field enumerators with GPS-tagged photo capture, automated yield estimation, and real-time sync to central dashboard.',
+          Scope_Requirements: 'Mobile-first crop cutting experiment (CCE) digitization platform. Offline-capable Android app for field enumerators.',
           UAT_Status: 'In Progress',
           UAT_Date: '2026-05-30',
-          UAT_Image_URLs: 'https://placehold.co/400x300/14B8A6/white?text=Crop+Survey+App',
-          Current_Blockers: 'Offline sync failing intermittently on Android 12 devices. Photo compression causing quality loss in yield verification images.',
-          IT_Cell_Last_Action: 'Bug fix deployed for sync issue (v2.4.1). Testing in progress across 5 pilot districts.'
+          UAT_Image_URLs: '',
+          Current_Blockers: 'Offline sync failing intermittently on Android 12 devices.',
+          IT_Cell_Last_Action: 'Bug fix deployed for sync issue (v2.4.1). Testing in progress.',
+          Mapped_Milestone: 'Milestone 5 - Module-Wise UAT Release (60% CAPEX)',
+          Allocated_Amount: 1000000
         },
         {
           Module_ID: 'MOD_5',
           Module_Name: 'Weather Intelligence',
           Type: 'AI',
-          Scope_Requirements: 'AI-powered hyper-local weather forecasting (5km grid) integrating IMD data, AWS station networks, and ML ensemble models. Provides crop-specific advisories, frost/heatwave alerts, and 10-day forecasts for agriculture planning.',
+          Scope_Requirements: 'AI-powered hyper-local weather forecasting (5km grid) integrating IMD data and AWS station networks.',
           UAT_Status: 'Not Started',
           UAT_Date: '',
           UAT_Image_URLs: '',
-          Current_Blockers: 'IMD API data agreement pending. AWS station integration awaiting NABCONS procurement clearance.',
-          IT_Cell_Last_Action: 'MoU draft sent to IMD for data sharing. Follow-up meeting scheduled for June 5.'
+          Current_Blockers: 'IMD API data agreement pending.',
+          IT_Cell_Last_Action: 'MoU draft sent to IMD for data sharing.',
+          Mapped_Milestone: 'Milestone 5 - Module-Wise UAT Release (60% CAPEX)',
+          Allocated_Amount: 1000000
         },
         {
           Module_ID: 'MOD_6',
           Module_Name: 'Soil Health Dashboard',
           Type: 'Core',
-          Scope_Requirements: 'Interactive dashboard displaying soil test results across all districts. Integrates with SHC (Soil Health Card) portal data. Includes nutrient deficiency heatmaps, fertilizer recommendation engine, and trend analytics over 5-year periods.',
+          Scope_Requirements: 'Interactive dashboard displaying soil test results across all districts. Integrates with SHC portal data.',
           UAT_Status: 'Completed',
           UAT_Date: '2026-04-02',
-          UAT_Image_URLs: 'https://placehold.co/400x300/059669/white?text=Soil+Health+Map,https://placehold.co/400x300/065F46/white?text=Nutrient+Charts',
+          UAT_Image_URLs: '',
           Current_Blockers: '',
-          IT_Cell_Last_Action: 'Dashboard deployed. Historical data loaded for 2021-2026 from 38 districts.'
+          IT_Cell_Last_Action: 'Dashboard deployed. Historical data loaded for 2021-2026.',
+          Mapped_Milestone: 'Milestone 5 - Module-Wise UAT Release (60% CAPEX)',
+          Allocated_Amount: 1000000
         },
         {
           Module_ID: 'MOD_7',
           Module_Name: 'Market Price Predictor',
           Type: 'AI',
-          Scope_Requirements: 'LSTM-based time series model predicting mandi prices for 15 key commodities across 200+ APMCs. Integrates eNAM data feeds, seasonal indices, and macroeconomic indicators. Provides 7-day and 30-day price forecasts with confidence intervals.',
+          Scope_Requirements: 'LSTM-based time series model predicting mandi prices for 15 key commodities across 200+ APMCs.',
           UAT_Status: 'In Progress',
           UAT_Date: '2026-05-25',
-          UAT_Image_URLs: 'https://placehold.co/400x300/8B5CF6/white?text=Price+Forecast',
+          UAT_Image_URLs: '',
           Current_Blockers: '',
-          IT_Cell_Last_Action: 'LSTM model v3 deployed to staging. Accuracy within 8% MAPE for top 10 commodities.'
+          IT_Cell_Last_Action: 'LSTM model v3 deployed to staging.',
+          Mapped_Milestone: 'Milestone 5 - Module-Wise UAT Release (60% CAPEX)',
+          Allocated_Amount: 1000000
         },
         {
           Module_ID: 'MOD_8',
           Module_Name: 'Subsidy Disbursement Tracker',
           Type: 'Additional',
-          Scope_Requirements: 'End-to-end tracking of PM-KISAN and state-level subsidy disbursements. Real-time reconciliation with bank NPCI data. Beneficiary-level status tracking (initiated → processed → credited → failed). Exception handling dashboard for rejected transfers.',
+          Scope_Requirements: 'End-to-end tracking of PM-KISAN and state-level subsidy disbursements.',
           UAT_Status: 'Not Started',
           UAT_Date: '',
           UAT_Image_URLs: '',
-          Current_Blockers: 'NPCI sandbox access pending approval. State treasury integration specification not finalized.',
-          IT_Cell_Last_Action: 'Request submitted to NPCI for sandbox credentials. Expected turnaround: 2 weeks.'
+          Current_Blockers: 'NPCI sandbox access pending approval.',
+          IT_Cell_Last_Action: 'Request submitted to NPCI for sandbox credentials.',
+          Mapped_Milestone: 'Milestone 5 - Module-Wise UAT Release (60% CAPEX)',
+          Allocated_Amount: 752000
+        }
+      ],
+      subModules: [
+        {
+          Sub_Module_ID: 'SUB_1',
+          Parent_Module_ID: 'MOD_1',
+          Sub_Module_Name: 'Interactive Map Interface',
+          Scope_Requirements: 'Frontend GIS interface with Leaflet/OpenLayers integration',
+          UAT_Status: 'Completed',
+          UAT_Date: '2026-04-10',
+          UAT_Image_URLs: 'https://placehold.co/400x300/0F766E/white?text=Geoportal+Map',
+          Current_Blockers: '',
+          IT_Cell_Last_Action: 'Signed off'
+        },
+        {
+          Sub_Module_ID: 'SUB_2',
+          Parent_Module_ID: 'MOD_1',
+          Sub_Module_Name: 'Layer Management Component',
+          Scope_Requirements: 'Controls for enabling/disabling layers',
+          UAT_Status: 'Completed',
+          UAT_Date: '2026-04-12',
+          UAT_Image_URLs: 'https://placehold.co/400x300/065F46/white?text=Layer+Controls',
+          Current_Blockers: '',
+          IT_Cell_Last_Action: 'Signed off'
+        },
+        {
+          Sub_Module_ID: 'SUB_3',
+          Parent_Module_ID: 'MOD_1',
+          Sub_Module_Name: 'Cadastral Map Vectorization Module',
+          Scope_Requirements: 'Backend script for vectorizing raster maps',
+          UAT_Status: 'Completed',
+          UAT_Date: '2026-04-15',
+          UAT_Image_URLs: '',
+          Current_Blockers: '',
+          IT_Cell_Last_Action: 'Completed and tested'
+        },
+        {
+          Sub_Module_ID: 'SUB_4',
+          Parent_Module_ID: 'MOD_2',
+          Sub_Module_Name: 'Satellite Imagery API Downloader',
+          Scope_Requirements: 'Downloads Sentinel-2 imagery for selected areas',
+          UAT_Status: 'Completed',
+          UAT_Date: '2026-05-10',
+          UAT_Image_URLs: 'https://placehold.co/400x300/8B5CF6/white?text=API+Downloader',
+          Current_Blockers: '',
+          IT_Cell_Last_Action: 'Tested successfully'
+        },
+        {
+          Sub_Module_ID: 'SUB_5',
+          Parent_Module_ID: 'MOD_2',
+          Sub_Module_Name: 'U-Net Boundary Detection Model',
+          Scope_Requirements: 'The main AI boundary detection neural network',
+          UAT_Status: 'In Progress',
+          UAT_Date: '2026-05-20',
+          UAT_Image_URLs: 'https://placehold.co/400x300/8B5CF6/white?text=AI+Boundary+Detection',
+          Current_Blockers: 'Accuracy at 88% instead of 92%',
+          IT_Cell_Last_Action: 'Gathering North-East training data'
+        },
+        {
+          Sub_Module_ID: 'SUB_6',
+          Parent_Module_ID: 'MOD_3',
+          Sub_Module_Name: 'Aadhaar Auth Connector',
+          Scope_Requirements: 'Integration with UIDAI KYC gateway',
+          UAT_Status: 'Completed',
+          UAT_Date: '2026-03-25',
+          UAT_Image_URLs: '',
+          Current_Blockers: '',
+          IT_Cell_Last_Action: 'Integrated and certified'
+        },
+        {
+          Sub_Module_ID: 'SUB_7',
+          Parent_Module_ID: 'MOD_3',
+          Sub_Module_Name: 'Land Registry Syncer',
+          Scope_Requirements: 'Syncs land records database with land revenue APIs',
+          UAT_Status: 'Completed',
+          UAT_Date: '2026-03-28',
+          UAT_Image_URLs: 'https://placehold.co/400x300/059669/white?text=Farmer+Database',
+          Current_Blockers: '',
+          IT_Cell_Last_Action: 'Sync completed'
+        },
+        {
+          Sub_Module_ID: 'SUB_8',
+          Parent_Module_ID: 'MOD_4',
+          Sub_Module_Name: 'CCE Digital Form Builder',
+          Scope_Requirements: 'Form customization engine for CCE questions',
+          UAT_Status: 'Completed',
+          UAT_Date: '2026-05-20',
+          UAT_Image_URLs: '',
+          Current_Blockers: '',
+          IT_Cell_Last_Action: 'Approved'
+        },
+        {
+          Sub_Module_ID: 'SUB_9',
+          Parent_Module_ID: 'MOD_4',
+          Sub_Module_Name: 'Offline Data Sync Manager',
+          Scope_Requirements: 'Sync queue for offline data store',
+          UAT_Status: 'In Progress',
+          UAT_Date: '2026-05-30',
+          UAT_Image_URLs: 'https://placehold.co/400x300/14B8A6/white?text=Crop+Survey+App',
+          Current_Blockers: 'Sync failing on Android 12',
+          IT_Cell_Last_Action: 'Working on patch'
+        },
+        {
+          Sub_Module_ID: 'SUB_10',
+          Parent_Module_ID: 'MOD_7',
+          Sub_Module_Name: 'APMC Mandi Price Scraper',
+          Scope_Requirements: 'Scrapes price lists from APMC websites',
+          UAT_Status: 'Completed',
+          UAT_Date: '2026-05-20',
+          UAT_Image_URLs: '',
+          Current_Blockers: '',
+          IT_Cell_Last_Action: 'Stable and running daily'
+        },
+        {
+          Sub_Module_ID: 'SUB_11',
+          Parent_Module_ID: 'MOD_7',
+          Sub_Module_Name: 'LSTM Predictor API',
+          Scope_Requirements: 'Flask/Python microservice running predictions',
+          UAT_Status: 'In Progress',
+          UAT_Date: '2026-05-25',
+          UAT_Image_URLs: 'https://placehold.co/400x300/8B5CF6/white?text=Price+Forecast',
+          Current_Blockers: '',
+          IT_Cell_Last_Action: 'Model v3 deployed'
         }
       ],
       payments: [
         { Milestone_Name: 'MoU Signed', Amount: 0, Payment_Status: 'Completed', Type: 'CAPEX' },
-        { Milestone_Name: 'CAPEX 50:50 GoK/NABCONS', Amount: 14920000, Payment_Status: 'Pending', Type: 'CAPEX' },
-        { Milestone_Name: 'OPEX Phase 1', Amount: 8000000, Payment_Status: 'Pending', Type: 'OPEX' },
-        { Milestone_Name: 'OPEX Phase 2', Amount: 12000000, Payment_Status: 'Pending', Type: 'OPEX' },
-        { Milestone_Name: 'OPEX Remaining (5 Years)', Amount: 80000000, Payment_Status: 'Pending', Type: 'OPEX' }
+        { Milestone_Name: 'Milestone 1 - Initial Design & Setup (10% CAPEX)', Amount: 1492000, Payment_Status: 'Pending', Type: 'CAPEX' },
+        { Milestone_Name: 'Milestone 2 - Core Database & GIS Dev (10% CAPEX)', Amount: 1492000, Payment_Status: 'Pending', Type: 'CAPEX' },
+        { Milestone_Name: 'Milestone 3 - Mobile Apps Development (10% CAPEX)', Amount: 1492000, Payment_Status: 'Pending', Type: 'CAPEX' },
+        { Milestone_Name: 'Milestone 4 - Integration & Security Audit (10% CAPEX)', Amount: 1492000, Payment_Status: 'Pending', Type: 'CAPEX' },
+        { Milestone_Name: 'Milestone 5 - Module-Wise UAT Release (60% CAPEX)', Amount: 8952000, Payment_Status: 'Pending', Type: 'CAPEX' },
+        { Milestone_Name: 'OPEX Year 1 - Operations & Maintenance', Amount: 20000000, Payment_Status: 'Pending', Type: 'OPEX' },
+        { Milestone_Name: 'OPEX Year 2 - Operations & Maintenance', Amount: 20000000, Payment_Status: 'Pending', Type: 'OPEX' },
+        { Milestone_Name: 'OPEX Year 3 - Operations & Maintenance', Amount: 20000000, Payment_Status: 'Pending', Type: 'OPEX' },
+        { Milestone_Name: 'OPEX Year 4 - Operations & Maintenance', Amount: 20000000, Payment_Status: 'Pending', Type: 'OPEX' },
+        { Milestone_Name: 'OPEX Year 5 - Operations & Maintenance', Amount: 20000000, Payment_Status: 'Pending', Type: 'OPEX' }
       ]
     };
   },
@@ -167,13 +311,13 @@ const App = {
     // Stats
     const statsContainer = document.getElementById('stats-container');
     if (statsContainer) {
-      statsContainer.innerHTML = Components.renderStatCards(this.state.modules, this.state.payments);
+      statsContainer.innerHTML = Components.renderStatCards(this.state.modules, this.state.payments, this.state.subModules);
     }
 
     // Payments
     const paymentsContainer = document.getElementById('payments-container');
     if (paymentsContainer) {
-      paymentsContainer.innerHTML = Components.renderPaymentCards(this.state.payments);
+      paymentsContainer.innerHTML = Components.renderPaymentCards(this.state.payments, this.state.modules, this.state.subModules);
     }
 
     // Modules
@@ -186,20 +330,29 @@ const App = {
   renderModules() {
     const container = document.getElementById('modules-container');
     if (container) {
-      container.innerHTML = Components.renderModuleCards(this.state.modules, this.state.currentFilter);
+      container.innerHTML = Components.renderModuleCards(this.state.modules, this.state.subModules, this.state.currentFilter);
     }
   },
 
   populateAdminDropdowns() {
-    // Module selector for image upload
+    // Module selectors
     const uploadSelect = document.getElementById('upload-module-select');
+    const subformParentSelect = document.getElementById('subform-parent-id');
+
+    const moduleOptions = '<option value="">-- Select Module --</option>' + 
+      this.state.modules.map(m => `<option value="${m.Module_ID}">${m.Module_Name} (${m.Module_ID})</option>`).join('');
+
     if (uploadSelect) {
       const current = uploadSelect.value;
-      uploadSelect.innerHTML = '<option value="">-- Select Module --</option>';
-      this.state.modules.forEach(m => {
-        uploadSelect.innerHTML += `<option value="${m.Module_ID}">${m.Module_Name} (${m.Module_ID})</option>`;
-      });
+      uploadSelect.innerHTML = moduleOptions;
       if (current) uploadSelect.value = current;
+    }
+
+    if (subformParentSelect) {
+      const current = subformParentSelect.value;
+      subformParentSelect.innerHTML = '<option value="">-- Select Parent Module --</option>' +
+        this.state.modules.map(m => `<option value="${m.Module_ID}">${m.Module_Name} (${m.Module_ID})</option>`).join('');
+      if (current) subformParentSelect.value = current;
     }
 
     // Payment milestone selector
@@ -225,12 +378,27 @@ const App = {
     }
   },
 
+  populateUploadSubModules() {
+    const moduleSelect = document.getElementById('upload-module-select');
+    const subModuleSelect = document.getElementById('upload-submodule-select');
+    if (!moduleSelect || !subModuleSelect) return;
+
+    const moduleId = moduleSelect.value;
+    subModuleSelect.innerHTML = '<option value="">-- Select Sub-module (Optional) --</option>';
+    
+    if (moduleId) {
+      const filtered = this.state.subModules.filter(sub => sub.Parent_Module_ID === moduleId);
+      filtered.forEach(sub => {
+        subModuleSelect.innerHTML += `<option value="${sub.Sub_Module_ID}">${sub.Sub_Module_Name} (${sub.Sub_Module_ID})</option>`;
+      });
+    }
+  },
+
   // ── Filters ────────────────────────────────────────────
 
   filterModules(type) {
     this.state.currentFilter = type;
 
-    // Update active button
     document.querySelectorAll('#filter-buttons .filter-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.filter === type);
     });
@@ -247,7 +415,8 @@ const App = {
     this.state.currentModule = module;
     const modalBody = document.getElementById('modal-body');
     if (modalBody) {
-      modalBody.innerHTML = Components.renderModuleModal(module, this.state.isAdminUnlocked);
+      const moduleSubModules = this.state.subModules.filter(sub => sub.Parent_Module_ID === moduleId);
+      modalBody.innerHTML = Components.renderModuleModal(module, moduleSubModules, this.state.isAdminUnlocked);
     }
 
     document.getElementById('module-modal').classList.remove('hidden');
@@ -261,7 +430,6 @@ const App = {
   },
 
   switchModalTab(tabName) {
-    // Update tab buttons
     document.querySelectorAll('.modal-tab-btn').forEach(btn => {
       const btnTab = btn.textContent.toLowerCase();
       const isActive = (
@@ -272,7 +440,6 @@ const App = {
       btn.classList.toggle('active', isActive);
     });
 
-    // Update tab panes
     document.querySelectorAll('.modal-tab-pane').forEach(pane => {
       pane.classList.toggle('active', pane.dataset.tab === tabName);
     });
@@ -319,7 +486,6 @@ const App = {
       document.getElementById('admin-login').classList.add('hidden');
       document.getElementById('admin-content').classList.remove('hidden');
       this.showToast('Admin panel unlocked', 'success');
-      // If modal is open, refresh it to show admin actions
       if (this.state.currentModule) {
         this.openModuleModal(this.state.currentModule.Module_ID);
       }
@@ -336,7 +502,6 @@ const App = {
     const module = this.state.modules.find(m => m.Module_ID === moduleId);
     if (!module) return;
 
-    // Populate form fields
     document.getElementById('form-module-id').value = module.Module_ID;
     document.getElementById('form-module-name').value = module.Module_Name || '';
     document.getElementById('form-module-type').value = module.Type || 'Core';
@@ -345,16 +510,13 @@ const App = {
     document.getElementById('form-scope').value = module.Scope_Requirements || '';
     document.getElementById('form-blockers').value = module.Current_Blockers || '';
     document.getElementById('form-last-action').value = module.IT_Cell_Last_Action || '';
-    document.getElementById('form-sub-modules').value = module.Sub_Modules || '';
     document.getElementById('form-mapped-milestone').value = module.Mapped_Milestone || '';
+    document.getElementById('form-allocated-amount').value = module.Allocated_Amount || 0;
 
-    // Update submit button text
     document.getElementById('module-submit-text').textContent = 'Update Module';
 
-    // Close modal
     this.closeModuleModal();
 
-    // Scroll to admin panel
     const adminPanel = document.getElementById('admin-panel');
     if (adminPanel) {
       adminPanel.classList.remove('hidden');
@@ -367,16 +529,17 @@ const App = {
     const module = this.state.modules.find(m => m.Module_ID === moduleId);
     if (!module) return;
 
-    if (!confirm(`Are you sure you want to delete the module "${module.Module_Name}"?`)) {
+    if (!confirm(`Are you sure you want to delete the module "${module.Module_Name}"? This will also delete all its sub-modules.`)) {
       return;
     }
 
     try {
-      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' || !CONFIG.APPS_SCRIPT_URL;
 
       if (isDemo) {
         await new Promise(resolve => setTimeout(resolve, 600));
         this.state.modules = this.state.modules.filter(m => m.Module_ID !== moduleId);
+        this.state.subModules = this.state.subModules.filter(sub => sub.Parent_Module_ID !== moduleId);
         this.showToast('Module deleted (demo mode)', 'success');
         this.renderDashboard();
       } else {
@@ -384,6 +547,7 @@ const App = {
         this.showToast('Module deleted successfully', 'success');
         const data = await ApiService.fetchData();
         this.state.modules = data.modules || [];
+        this.state.subModules = data.subModules || [];
         this.state.payments = data.payments || [];
         this.renderDashboard();
       }
@@ -391,6 +555,101 @@ const App = {
     } catch (error) {
       this.showToast('Failed to delete module: ' + error.message, 'error');
     }
+  },
+
+  // ── Sub-module helpers ──
+
+  openSubModuleForm(parentId) {
+    document.getElementById('subform-parent-id').value = parentId;
+    this.closeModuleModal();
+    const adminPanel = document.getElementById('admin-panel');
+    if (adminPanel) {
+      adminPanel.classList.remove('hidden');
+      adminPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+    document.getElementById('subform-name').focus();
+  },
+
+  editSubModule(subModuleId) {
+    const sub = this.state.subModules.find(s => s.Sub_Module_ID === subModuleId);
+    if (!sub) return;
+
+    document.getElementById('subform-id').value = sub.Sub_Module_ID;
+    document.getElementById('subform-parent-id').value = sub.Parent_Module_ID || '';
+    document.getElementById('subform-name').value = sub.Sub_Module_Name || '';
+    document.getElementById('subform-status').value = sub.UAT_Status || 'Not Started';
+    document.getElementById('subform-date').value = sub.UAT_Date || '';
+    document.getElementById('subform-scope').value = sub.Scope_Requirements || '';
+    document.getElementById('subform-blockers').value = sub.Current_Blockers || '';
+    document.getElementById('subform-last-action').value = sub.IT_Cell_Last_Action || '';
+
+    document.getElementById('submodule-submit-text').textContent = 'Update Sub-module';
+
+    this.closeModuleModal();
+
+    const adminPanel = document.getElementById('admin-panel');
+    if (adminPanel) {
+      adminPanel.classList.remove('hidden');
+      adminPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+    this.showToast(`Loaded sub-module for editing`, 'info');
+  },
+
+  async deleteSubModule(subModuleId) {
+    const sub = this.state.subModules.find(s => s.Sub_Module_ID === subModuleId);
+    if (!sub) return;
+
+    if (!confirm(`Are you sure you want to delete the sub-module "${sub.Sub_Module_Name}"?`)) {
+      return;
+    }
+
+    try {
+      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' || !CONFIG.APPS_SCRIPT_URL;
+
+      if (isDemo) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        this.state.subModules = this.state.subModules.filter(s => s.Sub_Module_ID !== subModuleId);
+        this.showToast('Sub-module deleted (demo mode)', 'success');
+        this.renderDashboard();
+      } else {
+        await ApiService.deleteSubModule(subModuleId);
+        this.showToast('Sub-module deleted successfully', 'success');
+        const data = await ApiService.fetchData();
+        this.state.modules = data.modules || [];
+        this.state.subModules = data.subModules || [];
+        this.state.payments = data.payments || [];
+        this.renderDashboard();
+      }
+      this.closeModuleModal();
+    } catch (error) {
+      this.showToast('Failed to delete sub-module: ' + error.message, 'error');
+    }
+  },
+
+  quickUploadUatImage(subModuleId) {
+    const sub = this.state.subModules.find(s => s.Sub_Module_ID === subModuleId);
+    if (!sub) return;
+
+    this.closeModuleModal();
+    const adminPanel = document.getElementById('admin-panel');
+    if (adminPanel) {
+      adminPanel.classList.remove('hidden');
+      adminPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    const uploadModuleSelect = document.getElementById('upload-module-select');
+    if (uploadModuleSelect) {
+      uploadModuleSelect.value = sub.Parent_Module_ID;
+      this.populateUploadSubModules();
+      
+      const uploadSubSelect = document.getElementById('upload-submodule-select');
+      if (uploadSubSelect) {
+        uploadSubSelect.value = subModuleId;
+      }
+    }
+
+    document.getElementById('upload-file-input').focus();
+    this.showToast(`Selected sub-module for screenshot upload`, 'info');
   },
 
   // ── Module Form ────────────────────────────────────────
@@ -407,8 +666,8 @@ const App = {
       UAT_Date: document.getElementById('form-uat-date').value,
       Current_Blockers: document.getElementById('form-blockers').value.trim(),
       IT_Cell_Last_Action: document.getElementById('form-last-action').value.trim(),
-      Sub_Modules: document.getElementById('form-sub-modules').value.trim(),
-      Mapped_Milestone: document.getElementById('form-mapped-milestone').value
+      Mapped_Milestone: document.getElementById('form-mapped-milestone').value,
+      Allocated_Amount: Number(document.getElementById('form-allocated-amount').value) || 0
     };
 
     if (!moduleData.Module_Name) {
@@ -425,10 +684,9 @@ const App = {
     spinner.classList.remove('hidden');
 
     try {
-      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' || !CONFIG.APPS_SCRIPT_URL;
 
       if (isDemo) {
-        // Simulate in demo mode
         await new Promise(resolve => setTimeout(resolve, 800));
         if (moduleId) {
           const idx = this.state.modules.findIndex(m => m.Module_ID === moduleId);
@@ -455,14 +713,13 @@ const App = {
           await ApiService.addModule(moduleData);
           this.showToast('Module added successfully', 'success');
         }
-        // Refresh data from server
         const data = await ApiService.fetchData();
         this.state.modules = data.modules || [];
+        this.state.subModules = data.subModules || [];
         this.state.payments = data.payments || [];
         this.renderDashboard();
       }
 
-      // Reset form
       document.getElementById('module-form').reset();
       document.getElementById('form-module-id').value = '';
       btnText.textContent = 'Add Module';
@@ -478,12 +735,100 @@ const App = {
     }
   },
 
+  // ── Submodule Form Submission ──
+
+  async handleSubModuleSubmit(event) {
+    event.preventDefault();
+
+    const subformId = document.getElementById('subform-id').value.trim();
+    const subModuleData = {
+      Parent_Module_ID: document.getElementById('subform-parent-id').value,
+      Sub_Module_Name: document.getElementById('subform-name').value.trim(),
+      UAT_Status: document.getElementById('subform-status').value,
+      UAT_Date: document.getElementById('subform-date').value,
+      Scope_Requirements: document.getElementById('subform-scope').value.trim(),
+      Current_Blockers: document.getElementById('subform-blockers').value.trim(),
+      IT_Cell_Last_Action: document.getElementById('subform-last-action').value.trim()
+    };
+
+    if (!subModuleData.Parent_Module_ID) {
+      this.showToast('Parent module selection is required', 'error');
+      return;
+    }
+    if (!subModuleData.Sub_Module_Name) {
+      this.showToast('Sub-module name is required', 'error');
+      return;
+    }
+
+    const btn = document.getElementById('submodule-submit-btn');
+    const btnText = document.getElementById('submodule-submit-text');
+    const spinner = document.getElementById('submodule-submit-spinner');
+
+    btn.disabled = true;
+    btnText.textContent = 'Saving...';
+    spinner.classList.remove('hidden');
+
+    try {
+      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' || !CONFIG.APPS_SCRIPT_URL;
+
+      if (isDemo) {
+        await new Promise(resolve => setTimeout(resolve, 700));
+        if (subformId) {
+          const idx = this.state.subModules.findIndex(s => s.Sub_Module_ID === subformId);
+          if (idx >= 0) {
+            this.state.subModules[idx] = { ...this.state.subModules[idx], ...subModuleData };
+          }
+          this.showToast('Sub-module updated (demo mode)', 'success');
+        } else {
+          const newSub = {
+            Sub_Module_ID: 'SUB_' + (this.state.subModules.length + 1),
+            ...subModuleData,
+            UAT_Image_URLs: ''
+          };
+          this.state.subModules.push(newSub);
+          this.showToast('Sub-module added (demo mode)', 'success');
+        }
+        this.renderDashboard();
+      } else {
+        if (subformId) {
+          subModuleData.Sub_Module_ID = subformId;
+          await ApiService.updateSubModule(subModuleData);
+          this.showToast('Sub-module updated successfully', 'success');
+        } else {
+          await ApiService.addSubModule(subModuleData);
+          this.showToast('Sub-module added successfully', 'success');
+        }
+        const data = await ApiService.fetchData();
+        this.state.modules = data.modules || [];
+        this.state.subModules = data.subModules || [];
+        this.state.payments = data.payments || [];
+        this.renderDashboard();
+      }
+
+      document.getElementById('submodule-form').reset();
+      document.getElementById('subform-id').value = '';
+      btnText.textContent = 'Add Sub-module';
+
+    } catch (error) {
+      this.showToast('Error: ' + error.message, 'error');
+    } finally {
+      btn.disabled = false;
+      spinner.classList.add('hidden');
+      if (!document.getElementById('subform-id').value) {
+        btnText.textContent = 'Add Sub-module';
+      }
+    }
+  },
+
   // ── Image Upload ───────────────────────────────────────
 
   async handleImageUpload() {
     const moduleSelect = document.getElementById('upload-module-select');
+    const subModuleSelect = document.getElementById('upload-submodule-select');
     const fileInput = document.getElementById('upload-file-input');
+    
     const moduleId = moduleSelect.value;
+    const subModuleId = subModuleSelect.value;
     const file = fileInput.files[0];
 
     if (!moduleId) {
@@ -510,30 +855,40 @@ const App = {
     progress.classList.remove('hidden');
 
     try {
-      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' || !CONFIG.APPS_SCRIPT_URL;
 
       if (isDemo) {
         await new Promise(resolve => setTimeout(resolve, 1500));
         const demoUrl = `https://placehold.co/400x300/14B8A6/white?text=${encodeURIComponent(file.name)}`;
-        const mod = this.state.modules.find(m => m.Module_ID === moduleId);
-        if (mod) {
-          mod.UAT_Image_URLs = mod.UAT_Image_URLs
-            ? mod.UAT_Image_URLs + ',' + demoUrl
-            : demoUrl;
+        
+        if (subModuleId) {
+          const sub = this.state.subModules.find(s => s.Sub_Module_ID === subModuleId);
+          if (sub) {
+            sub.UAT_Image_URLs = sub.UAT_Image_URLs ? sub.UAT_Image_URLs + ',' + demoUrl : demoUrl;
+          }
+        } else {
+          const mod = this.state.modules.find(m => m.Module_ID === moduleId);
+          if (mod) {
+            mod.UAT_Image_URLs = mod.UAT_Image_URLs ? mod.UAT_Image_URLs + ',' + demoUrl : demoUrl;
+          }
         }
         this.showToast('Image uploaded (demo mode)', 'success');
         this.renderDashboard();
       } else {
-        const result = await ApiService.uploadImage(moduleId, file);
+        // Direct route based on whether subModuleId is specified
+        if (subModuleId) {
+          await ApiService.uploadImage(subModuleId, file, true);
+        } else {
+          await ApiService.uploadImage(moduleId, file, false);
+        }
         this.showToast('Image uploaded to Google Drive!', 'success');
-        // Refresh data
         const data = await ApiService.fetchData();
         this.state.modules = data.modules || [];
+        this.state.subModules = data.subModules || [];
         this.state.payments = data.payments || [];
         this.renderDashboard();
       }
 
-      // Reset upload form
       fileInput.value = '';
       document.getElementById('upload-preview').classList.add('hidden');
 
@@ -585,6 +940,7 @@ const App = {
         this.showToast('Milestone added successfully', 'success');
         const data = await ApiService.fetchData();
         this.state.modules = data.modules || [];
+        this.state.subModules = data.subModules || [];
         this.state.payments = data.payments || [];
         this.renderDashboard();
       }
@@ -617,7 +973,7 @@ const App = {
     btn.textContent = 'Updating...';
 
     try {
-      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' || !CONFIG.APPS_SCRIPT_URL;
 
       if (isDemo) {
         await new Promise(resolve => setTimeout(resolve, 600));
@@ -630,6 +986,7 @@ const App = {
         this.showToast('Payment status updated', 'success');
         const data = await ApiService.fetchData();
         this.state.modules = data.modules || [];
+        this.state.subModules = data.subModules || [];
         this.state.payments = data.payments || [];
         this.renderDashboard();
       }
@@ -654,7 +1011,6 @@ const App = {
     const toast = wrapper.firstElementChild;
     container.appendChild(toast);
 
-    // Auto-remove after 4 seconds
     setTimeout(() => {
       toast.classList.add('toast-out');
       setTimeout(() => toast.remove(), 350);
@@ -704,7 +1060,24 @@ const App = {
       document.getElementById('module-submit-text').textContent = 'Add Module';
     });
 
-    // Image upload
+    // Submodule form
+    document.getElementById('submodule-form')?.addEventListener('submit', (e) => {
+      this.handleSubModuleSubmit(e);
+    });
+
+    // Submodule form reset
+    document.getElementById('submodule-reset-btn')?.addEventListener('click', () => {
+      document.getElementById('submodule-form').reset();
+      document.getElementById('subform-id').value = '';
+      document.getElementById('submodule-submit-text').textContent = 'Add Sub-module';
+    });
+
+    // Upload module change -> dynamic populate submodules
+    document.getElementById('upload-module-select')?.addEventListener('change', () => {
+      this.populateUploadSubModules();
+    });
+
+    // Image upload submit
     document.getElementById('upload-btn')?.addEventListener('click', () => {
       this.handleImageUpload();
     });

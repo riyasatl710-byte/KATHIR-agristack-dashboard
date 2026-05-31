@@ -210,9 +210,9 @@
                 <!-- Populated dynamically -->
               </select>
             </div>
-            <div class="md:col-span-2">
-              <label class="form-label" for="form-sub-modules">Sub-modules / Components</label>
-              <textarea id="form-sub-modules" class="form-input" rows="2" placeholder="List sub-modules / components..."></textarea>
+            <div>
+              <label class="form-label" for="form-allocated-amount">Allocated Amount (₹) — Milestone share</label>
+              <input id="form-allocated-amount" type="number" class="form-input" placeholder="e.g. 1500000">
             </div>
             <div class="md:col-span-2 flex gap-3 pt-2">
               <button type="submit" id="module-submit-btn" class="btn-primary">
@@ -224,18 +224,84 @@
           </form>
         </div>
 
+        <!-- ── Add/Edit Sub-module Form ── -->
+        <div class="glass-card p-6">
+          <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span>🔧</span> Add / Edit Sub-module
+          </h4>
+          <form id="submodule-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="subform-id">Sub-module ID</label>
+              <input id="subform-id" class="form-input" placeholder="Auto-generated for new" readonly>
+            </div>
+            <div>
+              <label class="form-label" for="subform-parent-id">Parent Module *</label>
+              <select id="subform-parent-id" class="form-input" required>
+                <option value="">-- Select Parent Module --</option>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="md:col-span-2">
+              <label class="form-label" for="subform-name">Sub-module Name *</label>
+              <input id="subform-name" class="form-input" placeholder="e.g., Layer Management Component" required>
+            </div>
+            <div>
+              <label class="form-label" for="subform-status">UAT Status</label>
+              <select id="subform-status" class="form-input">
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Failed">Failed</option>
+                <option value="Re-testing">Re-testing</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="subform-date">UAT Date</label>
+              <input id="subform-date" type="date" class="form-input">
+            </div>
+            <div class="md:col-span-2">
+              <label class="form-label" for="subform-scope">Scope &amp; Requirements</label>
+              <textarea id="subform-scope" class="form-input" rows="2" placeholder="Describe sub-module scope..."></textarea>
+            </div>
+            <div>
+              <label class="form-label" for="subform-blockers">Current Blockers</label>
+              <textarea id="subform-blockers" class="form-input" rows="2" placeholder="Any blockers..."></textarea>
+            </div>
+            <div>
+              <label class="form-label" for="subform-last-action">IT Cell Last Action</label>
+              <textarea id="subform-last-action" class="form-input" rows="2" placeholder="Last action taken..."></textarea>
+            </div>
+            <div class="md:col-span-2 flex gap-3 pt-2">
+              <button type="submit" id="submodule-submit-btn" class="btn-primary">
+                <span id="submodule-submit-text">Add Sub-module</span>
+                <span id="submodule-submit-spinner" class="spinner spinner-sm hidden"></span>
+              </button>
+              <button type="button" id="submodule-reset-btn" class="btn-secondary">Reset</button>
+            </div>
+          </form>
+        </div>
+
         <!-- ── UAT Image Upload ── -->
         <div class="glass-card p-6">
           <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
             <span>📸</span> Upload UAT Image
           </h4>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="form-label" for="upload-module-select">Select Module</label>
-              <select id="upload-module-select" class="form-input">
-                <option value="">-- Select Module --</option>
-                <!-- Populated by JS -->
-              </select>
+            <div class="space-y-4">
+              <div>
+                <label class="form-label" for="upload-module-select">Select Module *</label>
+                <select id="upload-module-select" class="form-input" required>
+                  <option value="">-- Select Module --</option>
+                  <!-- Populated by JS -->
+                </select>
+              </div>
+              <div>
+                <label class="form-label" for="upload-submodule-select">Select Sub-module (Optional)</label>
+                <select id="upload-submodule-select" class="form-input">
+                  <option value="">-- Select Sub-module --</option>
+                  <!-- Populated dynamically by JS -->
+                </select>
+              </div>
             </div>
             <div>
               <label class="form-label">UAT Screenshot</label>

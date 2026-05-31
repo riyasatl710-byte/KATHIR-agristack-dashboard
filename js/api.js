@@ -64,6 +64,94 @@ const ApiService = {
     }
   },
 
+  async deleteModule(moduleId) {
+    try {
+      const payload = { action: 'delete_module', Module_ID: moduleId };
+      const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const result = await response.json();
+      if (result.status !== 'success') {
+        throw new Error(result.message || 'Failed to delete module');
+      }
+      return result;
+    } catch (error) {
+      console.error('ApiService.deleteModule error:', error);
+      throw error;
+    }
+  },
+
+  async addSubModule(subModuleData) {
+    try {
+      const payload = { action: 'add_sub_module', ...subModuleData };
+      const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const result = await response.json();
+      if (result.status !== 'success') {
+        throw new Error(result.message || 'Failed to add sub-module');
+      }
+      return result;
+    } catch (error) {
+      console.error('ApiService.addSubModule error:', error);
+      throw error;
+    }
+  },
+
+  async updateSubModule(subModuleData) {
+    try {
+      const payload = { action: 'update_sub_module', ...subModuleData };
+      const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const result = await response.json();
+      if (result.status !== 'success') {
+        throw new Error(result.message || 'Failed to update sub-module');
+      }
+      return result;
+    } catch (error) {
+      console.error('ApiService.updateSubModule error:', error);
+      throw error;
+    }
+  },
+
+  async deleteSubModule(subModuleId) {
+    try {
+      const payload = { action: 'delete_sub_module', Sub_Module_ID: subModuleId };
+      const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const result = await response.json();
+      if (result.status !== 'success') {
+        throw new Error(result.message || 'Failed to delete sub-module');
+      }
+      return result;
+    } catch (error) {
+      console.error('ApiService.deleteSubModule error:', error);
+      throw error;
+    }
+  },
+
   async updatePayment(milestoneName, status) {
     try {
       const payload = {
@@ -112,7 +200,7 @@ const ApiService = {
     }
   },
 
-  async uploadImage(moduleId, file) {
+  async uploadImage(id, file, isSubModule = false) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = async () => {
@@ -123,11 +211,15 @@ const ApiService = {
           const fileName = file.name;
           const payload = {
             action: 'upload_uat_image',
-            moduleId: moduleId,
             imageData: imageData,
             mimeType: mimeType,
             fileName: fileName
           };
+          if (isSubModule) {
+            payload.subModuleId = id;
+          } else {
+            payload.moduleId = id;
+          }
           const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
             method: 'POST',
             redirect: 'follow',
@@ -152,27 +244,5 @@ const ApiService = {
       };
       reader.readAsDataURL(file);
     });
-  },
-
-  async deleteModule(moduleId) {
-    try {
-      const payload = { action: 'delete_module', Module_ID: moduleId };
-      const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        body: JSON.stringify(payload)
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      const result = await response.json();
-      if (result.status !== 'success') {
-        throw new Error(result.message || 'Failed to delete module');
-      }
-      return result;
-    } catch (error) {
-      console.error('ApiService.deleteModule error:', error);
-      throw error;
-    }
   }
 };
