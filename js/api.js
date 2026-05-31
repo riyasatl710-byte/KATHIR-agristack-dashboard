@@ -90,6 +90,28 @@ const ApiService = {
     }
   },
 
+  async addPayment(paymentData) {
+    try {
+      const payload = { action: 'add_payment', ...paymentData };
+      const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const result = await response.json();
+      if (result.status !== 'success') {
+        throw new Error(result.message || 'Failed to add payment milestone');
+      }
+      return result;
+    } catch (error) {
+      console.error('ApiService.addPayment error:', error);
+      throw error;
+    }
+  },
+
   async uploadImage(moduleId, file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();

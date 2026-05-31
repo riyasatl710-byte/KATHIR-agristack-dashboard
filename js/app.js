@@ -67,7 +67,9 @@ const App = {
           UAT_Date: '2026-04-15',
           UAT_Image_URLs: 'https://placehold.co/400x300/0F766E/white?text=Geoportal+Map,https://placehold.co/400x300/065F46/white?text=Layer+Controls',
           Current_Blockers: '',
-          IT_Cell_Last_Action: 'Final UAT sign-off completed. Performance optimized for 50K concurrent users.'
+          IT_Cell_Last_Action: 'Final UAT sign-off completed. Performance optimized for 50K concurrent users.',
+          Sub_Modules: '• Interactive Map Interface\n• Layer Management Component\n• Cadastral Map Vectorization Module\n• GIS Database Connector',
+          Mapped_Milestone: 'OPEX Phase 1'
         },
         {
           Module_ID: 'MOD_2',
@@ -78,7 +80,9 @@ const App = {
           UAT_Date: '2026-05-20',
           UAT_Image_URLs: 'https://placehold.co/400x300/8B5CF6/white?text=AI+Boundary+Detection',
           Current_Blockers: 'Model accuracy at 88% IoU — needs improvement on fragmented holdings in hilly terrain. Additional training data from North-East India required.',
-          IT_Cell_Last_Action: 'Initiated data collection from Meghalaya and Mizoram. GPU cluster allocated for retraining.'
+          IT_Cell_Last_Action: 'Initiated data collection from Meghalaya and Mizoram. GPU cluster allocated for retraining.',
+          Sub_Modules: '• Satellite Imagery API Downloader\n• U-Net Boundary Detection Model\n• Vector Delineation Optimizer',
+          Mapped_Milestone: 'OPEX Phase 2'
         },
         {
           Module_ID: 'MOD_3',
@@ -208,6 +212,17 @@ const App = {
       });
       if (current) paymentSelect.value = current;
     }
+
+    // Mapped milestone selector in Module Form
+    const mappedMilestoneSelect = document.getElementById('form-mapped-milestone');
+    if (mappedMilestoneSelect) {
+      const current = mappedMilestoneSelect.value;
+      mappedMilestoneSelect.innerHTML = '<option value="">-- None --</option>';
+      this.state.payments.forEach(p => {
+        mappedMilestoneSelect.innerHTML += `<option value="${p.Milestone_Name}">${p.Milestone_Name}</option>`;
+      });
+      if (current) mappedMilestoneSelect.value = current;
+    }
   },
 
   // ── Filters ────────────────────────────────────────────
@@ -330,6 +345,8 @@ const App = {
     document.getElementById('form-scope').value = module.Scope_Requirements || '';
     document.getElementById('form-blockers').value = module.Current_Blockers || '';
     document.getElementById('form-last-action').value = module.IT_Cell_Last_Action || '';
+    document.getElementById('form-sub-modules').value = module.Sub_Modules || '';
+    document.getElementById('form-mapped-milestone').value = module.Mapped_Milestone || '';
 
     // Update submit button text
     document.getElementById('module-submit-text').textContent = 'Update Module';
@@ -389,7 +406,9 @@ const App = {
       UAT_Status: document.getElementById('form-uat-status').value,
       UAT_Date: document.getElementById('form-uat-date').value,
       Current_Blockers: document.getElementById('form-blockers').value.trim(),
-      IT_Cell_Last_Action: document.getElementById('form-last-action').value.trim()
+      IT_Cell_Last_Action: document.getElementById('form-last-action').value.trim(),
+      Sub_Modules: document.getElementById('form-sub-modules').value.trim(),
+      Mapped_Milestone: document.getElementById('form-mapped-milestone').value
     };
 
     if (!moduleData.Module_Name) {
@@ -525,6 +544,57 @@ const App = {
       btnText.textContent = 'Upload Image';
       spinner.classList.add('hidden');
       progress.classList.add('hidden');
+    }
+  },
+
+  // ── Add Payment Milestone ──────────────────────────────
+
+  async handleAddPaymentSubmit(event) {
+    event.preventDefault();
+
+    const paymentData = {
+      Milestone_Name: document.getElementById('add-payment-name').value.trim(),
+      Amount: Number(document.getElementById('add-payment-amount').value) || 0,
+      Payment_Status: document.getElementById('add-payment-status').value
+    };
+
+    if (!paymentData.Milestone_Name) {
+      this.showToast('Milestone name is required', 'error');
+      return;
+    }
+
+    const btn = document.getElementById('add-payment-submit-btn');
+    const btnText = document.getElementById('add-payment-submit-text');
+    const spinner = document.getElementById('add-payment-submit-spinner');
+
+    btn.disabled = true;
+    btnText.textContent = 'Adding...';
+    spinner.classList.remove('hidden');
+
+    try {
+      const isDemo = CONFIG.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' || !CONFIG.APPS_SCRIPT_URL;
+
+      if (isDemo) {
+        await new Promise(resolve => setTimeout(resolve, 800));
+        this.state.payments.push(paymentData);
+        this.showToast('Milestone added (demo mode)', 'success');
+        this.renderDashboard();
+      } else {
+        await ApiService.addPayment(paymentData);
+        this.showToast('Milestone added successfully', 'success');
+        const data = await ApiService.fetchData();
+        this.state.modules = data.modules || [];
+        this.state.payments = data.payments || [];
+        this.renderDashboard();
+      }
+
+      document.getElementById('add-payment-form').reset();
+    } catch (error) {
+      this.showToast('Error: ' + error.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btnText.textContent = 'Add Milestone';
+      spinner.classList.add('hidden');
     }
   },
 
@@ -693,6 +763,11 @@ const App = {
     // Payment form
     document.getElementById('payment-form')?.addEventListener('submit', (e) => {
       this.handlePaymentUpdate(e);
+    });
+
+    // Add Payment milestone form
+    document.getElementById('add-payment-form')?.addEventListener('submit', (e) => {
+      this.handleAddPaymentSubmit(e);
     });
 
     // Modal close

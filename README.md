@@ -232,14 +232,15 @@ If you encounter redirect issues, set `redirect: 'follow'` in your `fetch` optio
 agristack-dashboard/
 ├── apps-script/
 │   └── Code.gs              # Google Apps Script backend
-├── frontend/
-│   ├── index.html            # Dashboard UI
-│   ├── css/
-│   │   └── styles.css
-│   └── js/
-│       ├── config.js         # APPS_SCRIPT_URL constant
-│       └── app.js            # Frontend logic
-└── README.md                 # This file
+├── css/
+│   └── styles.css           # Styling
+├── js/
+│   ├── config.js            # Configuration constants
+│   ├── api.js               # API service layer
+│   ├── components.js        # UI component templates
+│   └── app.js               # Main application logic
+├── index.html               # Main dashboard HTML
+└── README.md                # This file
 ```
 
 ---

@@ -225,8 +225,15 @@ const Components = {
       <div class="modal-tab-pane active" data-tab="overview">
         <h5 class="text-sm font-semibold text-slate-300 mb-2">Scope &amp; Requirements</h5>
         <div class="bg-slate-800/50 rounded-lg p-4 text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">${m.Scope_Requirements || 'No scope defined.'}</div>
-        <div class="flex items-center gap-2 mt-4 text-xs text-slate-500">
+        
+        ${m.Sub_Modules ? `
+        <h5 class="text-sm font-semibold text-slate-300 mt-4 mb-2">Sub-modules / Components</h5>
+        <div class="bg-slate-800/30 border border-slate-750/30 rounded-lg p-4 text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">${m.Sub_Modules}</div>
+        ` : ''}
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-6 pt-4 border-t border-slate-800/50 text-xs text-slate-500">
           <span>Module ID: <strong class="text-slate-400">${m.Module_ID}</strong></span>
+          ${m.Mapped_Milestone ? `<span>Payment Milestone: <strong class="text-teal-400 font-semibold">${m.Mapped_Milestone}</strong></span>` : ''}
         </div>
       </div>
 

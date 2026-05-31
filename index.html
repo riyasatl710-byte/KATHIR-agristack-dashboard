@@ -203,6 +203,17 @@
               <label class="form-label" for="form-last-action">IT Cell Last Action</label>
               <textarea id="form-last-action" class="form-input" rows="2" placeholder="Last action taken..."></textarea>
             </div>
+            <div>
+              <label class="form-label" for="form-mapped-milestone">Mapped Payment Milestone</label>
+              <select id="form-mapped-milestone" class="form-input">
+                <option value="">-- None --</option>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="md:col-span-2">
+              <label class="form-label" for="form-sub-modules">Sub-modules / Components</label>
+              <textarea id="form-sub-modules" class="form-input" rows="2" placeholder="List sub-modules / components..."></textarea>
+            </div>
             <div class="md:col-span-2 flex gap-3 pt-2">
               <button type="submit" id="module-submit-btn" class="btn-primary">
                 <span id="module-submit-text">Add Module</span>
@@ -245,6 +256,37 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- ── Add Payment Milestone ── -->
+        <div class="glass-card p-6">
+          <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span>➕</span> Add Payment Milestone
+          </h4>
+          <form id="add-payment-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div>
+              <label class="form-label" for="add-payment-name">Milestone Name *</label>
+              <input id="add-payment-name" class="form-input" placeholder="e.g., OPEX Phase 3" required>
+            </div>
+            <div>
+              <label class="form-label" for="add-payment-amount">Amount (₹) *</label>
+              <input id="add-payment-amount" type="number" class="form-input" placeholder="e.g., 5000000" required>
+            </div>
+            <div>
+              <label class="form-label" for="add-payment-status">Payment Status</label>
+              <select id="add-payment-status" class="form-input">
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+                <option value="Partial">Partial</option>
+              </select>
+            </div>
+            <div class="md:col-span-3 flex gap-3 pt-2">
+              <button type="submit" id="add-payment-submit-btn" class="btn-primary">
+                <span id="add-payment-submit-text">Add Milestone</span>
+                <span id="add-payment-submit-spinner" class="spinner spinner-sm hidden"></span>
+              </button>
+            </div>
+          </form>
         </div>
 
         <!-- ── Payment Status Update ── -->

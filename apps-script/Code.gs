@@ -24,7 +24,9 @@ var MODULES_HEADERS = [
   'UAT_Date',
   'UAT_Image_URLs',
   'Current_Blockers',
-  'IT_Cell_Last_Action'
+  'IT_Cell_Last_Action',
+  'Sub_Modules',
+  'Mapped_Milestone'
 ];
 
 var PAYMENTS_HEADERS = [
@@ -141,6 +143,8 @@ function doPost(e) {
         return handleUpdateModule_(payload);
       case 'delete_module':
         return handleDeleteModule_(payload);
+      case 'add_payment':
+        return handleAddPayment_(payload);
       case 'update_payment':
         return handleUpdatePayment_(payload);
       case 'upload_uat_image':
@@ -183,7 +187,9 @@ function handleAddModule_(payload) {
     payload.UAT_Date           || '',
     payload.UAT_Image_URLs     || '',
     payload.Current_Blockers   || '',
-    payload.IT_Cell_Last_Action|| ''
+    payload.IT_Cell_Last_Action|| '',
+    payload.Sub_Modules        || '',
+    payload.Mapped_Milestone   || ''
   ];
 
   sheet.appendRow(newRow);
@@ -267,6 +273,32 @@ function handleUpdatePayment_(payload) {
   var values = range.getValues()[0];
 
   var paymentObj = rowToObject_(PAYMENTS_HEADERS, values);
+  return jsonResponse_({
+    status: 'success',
+    data: paymentObj
+  });
+}
+
+/**
+ * Appends a new payment milestone row.
+ */
+function handleAddPayment_(payload) {
+  var ss    = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(PAYMENTS_SHEET);
+
+  if (!sheet) {
+    throw new Error('Sheet "' + PAYMENTS_SHEET + '" not found. Run autoSetup() first.');
+  }
+
+  var newRow = [
+    payload.Milestone_Name || '',
+    Number(payload.Amount) || 0,
+    payload.Payment_Status || 'Pending'
+  ];
+
+  sheet.appendRow(newRow);
+
+  var paymentObj = rowToObject_(PAYMENTS_HEADERS, newRow);
   return jsonResponse_({
     status: 'success',
     data: paymentObj
