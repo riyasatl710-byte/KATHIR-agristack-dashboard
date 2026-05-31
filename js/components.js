@@ -37,6 +37,21 @@ const Components = {
     return str.length > max ? str.substring(0, max) + '…' : str;
   },
 
+  /**
+   * Robust fallback classifier for payment types.
+   * Checks the Type property first. If empty, performs keyword matching on the milestone name.
+   */
+  getPaymentType(p) {
+    if (p && p.Type && String(p.Type).trim() !== '') {
+      return String(p.Type).trim().toUpperCase();
+    }
+    const name = String(p ? p.Milestone_Name : '').toUpperCase();
+    if (name.includes('OPEX')) return 'OPEX';
+    if (name.includes('CAPEX')) return 'CAPEX';
+    // If the amount is large (e.g. >= 5M) it's likely OPEX or CAPEX, but let's default to CAPEX
+    return 'CAPEX';
+  },
+
   // ── Stat Cards ─────────────────────────────────────────
 
   renderStatCards(modules, payments) {
@@ -45,14 +60,14 @@ const Components = {
     const activeBlockers = modules.filter(m => m.Current_Blockers && String(m.Current_Blockers).trim() !== '').length;
 
     // CAPEX Calculations
-    const capexPayments = payments.filter(p => String(p.Type || '').toUpperCase() === 'CAPEX');
+    const capexPayments = payments.filter(p => this.getPaymentType(p) === 'CAPEX');
     const totalCapex = capexPayments.reduce((sum, p) => sum + (Number(p.Amount) || 0), 0) || 14920000;
     const utilizedCapex = capexPayments
       .filter(p => String(p.Payment_Status).toLowerCase() === 'completed')
       .reduce((sum, p) => sum + (Number(p.Amount) || 0), 0);
 
     // OPEX Calculations
-    const opexPayments = payments.filter(p => String(p.Type || '').toUpperCase() === 'OPEX');
+    const opexPayments = payments.filter(p => this.getPaymentType(p) === 'OPEX');
     const totalOpex = opexPayments.reduce((sum, p) => sum + (Number(p.Amount) || 0), 0) || 100000000;
     const utilizedOpex = opexPayments
       .filter(p => String(p.Payment_Status).toLowerCase() === 'completed')
@@ -94,8 +109,9 @@ const Components = {
       const progressWidth = isCompleted ? 100 : (status.toLowerCase() === 'partial' ? 50 : 0);
       const progressColor = isCompleted ? 'bg-emerald-500' : (status.toLowerCase() === 'partial' ? 'bg-amber-500' : 'bg-slate-600');
       
-      const isCapex = String(p.Type || '').toUpperCase() === 'CAPEX';
-      const typeBadgeHtml = `<span class="text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full ${isCapex ? 'bg-teal-500/10 text-teal-300 border border-teal-500/25' : 'bg-amber-500/10 text-amber-300 border border-amber-500/25'}">${p.Type || 'CAPEX'}</span>`;
+      const pType = this.getPaymentType(p);
+      const isCapex = pType === 'CAPEX';
+      const typeBadgeHtml = `<span class="text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full ${isCapex ? 'bg-teal-500/10 text-teal-300 border border-teal-500/25' : 'bg-amber-500/10 text-amber-300 border border-amber-500/25'}">${pType}</span>`;
 
       return `
         <div class="glass-card p-4 animate-fade-in-up">
