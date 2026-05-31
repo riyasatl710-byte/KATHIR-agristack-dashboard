@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agristack Dashboard | Digital Agriculture Division</title>
+  <meta name="description" content="Comprehensive project tracking dashboard for India's Digital Agriculture Infrastructure — Agristack. Track 21 core modules, AI features, UAT status, and payment milestones.">
+
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          colors: {
+            'agri-primary': '#0F766E',
+            'agri-primary-light': '#14B8A6',
+            'agri-secondary': '#065F46',
+            'agri-accent': '#F59E0B',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts — Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg-slate-900 text-slate-50 font-sans min-h-screen">
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- NAVIGATION BAR                                         -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <nav id="main-nav" class="nav-glass fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex items-center justify-between h-16">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🌾</span>
+        <div>
+          <h1 class="text-lg font-bold leading-tight text-white tracking-tight">Agristack</h1>
+          <p class="text-xs text-slate-400 -mt-0.5">Digital Agriculture Division</p>
+        </div>
+      </div>
+      <!-- Nav Actions -->
+      <div class="flex items-center gap-3">
+        <a href="#modules-section" class="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">Dashboard</a>
+        <button id="admin-toggle-btn" class="btn-secondary text-xs" aria-label="Toggle Admin Panel">
+          🔒 Admin
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- HERO SECTION                                           -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <header class="pt-24 pb-8 px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="max-w-7xl mx-auto text-center mb-10">
+      <h2 class="text-3xl sm:text-4xl font-bold mb-2 bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-300 bg-clip-text text-transparent">
+        Agristack Project Dashboard
+      </h2>
+      <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
+        Comprehensive tracking for India's Digital Agriculture Infrastructure
+      </p>
+    </div>
+
+    <!-- Stat Cards -->
+    <div id="stats-container" class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Populated by JS -->
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- PAYMENT MILESTONES SECTION                             -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="payments-section" class="py-8 px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <h3 class="text-xl font-semibold mb-5 flex items-center gap-2">
+        <span>💰</span> Payment Milestones
+      </h3>
+      <div id="payments-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- MODULES SECTION                                        -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="modules-section" class="py-8 px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <h3 class="text-xl font-semibold flex items-center gap-2">
+          <span>📦</span> Project Modules
+        </h3>
+        <!-- Filter Buttons -->
+        <div id="filter-buttons" class="flex flex-wrap gap-2">
+          <button class="filter-btn active" data-filter="All">All</button>
+          <button class="filter-btn" data-filter="Core">🏗️ Core</button>
+          <button class="filter-btn" data-filter="AI">🤖 AI</button>
+          <button class="filter-btn" data-filter="Additional">➕ Additional</button>
+        </div>
+      </div>
+      <div id="modules-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- MODULE DETAIL MODAL                                    -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="module-modal" class="modal-overlay hidden">
+    <div class="modal-content" id="modal-inner">
+      <button class="modal-close-btn" id="modal-close-btn" aria-label="Close modal">&times;</button>
+      <div id="modal-body">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- LIGHTBOX                                               -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="lightbox" class="lightbox-overlay hidden">
+    <button class="lightbox-close" id="lightbox-close-btn" aria-label="Close lightbox">&times;</button>
+    <img id="lightbox-img" src="" alt="UAT Screenshot">
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- ADMIN PANEL                                            -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="admin-panel" class="hidden py-8 px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="max-w-4xl mx-auto admin-panel">
+      <h3 class="text-xl font-semibold mb-6 flex items-center gap-2">
+        <span>⚙️</span> Admin Panel
+      </h3>
+
+      <!-- Password Gate -->
+      <div id="admin-login" class="glass-card p-6 max-w-md mx-auto">
+        <p class="text-sm text-slate-400 mb-4">Enter admin password to unlock management features.</p>
+        <div class="flex gap-3">
+          <input type="password" id="admin-password-input" class="form-input flex-1" placeholder="Password">
+          <button id="admin-unlock-btn" class="btn-primary text-sm">Unlock</button>
+        </div>
+      </div>
+
+      <!-- Admin Content (hidden until unlocked) -->
+      <div id="admin-content" class="hidden space-y-8">
+
+        <!-- ── Add/Edit Module Form ── -->
+        <div class="glass-card p-6">
+          <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span>📝</span> Add / Edit Module
+          </h4>
+          <form id="module-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="form-module-id">Module ID</label>
+              <input id="form-module-id" class="form-input" placeholder="Auto-generated for new" readonly>
+            </div>
+            <div>
+              <label class="form-label" for="form-module-name">Module Name *</label>
+              <input id="form-module-name" class="form-input" placeholder="e.g., Geoportal" required>
+            </div>
+            <div>
+              <label class="form-label" for="form-module-type">Type</label>
+              <select id="form-module-type" class="form-input">
+                <option value="Core">Core</option>
+                <option value="AI">AI</option>
+                <option value="Additional">Additional</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="form-uat-status">UAT Status</label>
+              <select id="form-uat-status" class="form-input">
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Failed">Failed</option>
+                <option value="Re-testing">Re-testing</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="form-uat-date">UAT Date</label>
+              <input id="form-uat-date" type="date" class="form-input">
+            </div>
+            <div class="md:col-span-2">
+              <label class="form-label" for="form-scope">Scope &amp; Requirements</label>
+              <textarea id="form-scope" class="form-input" rows="3" placeholder="Describe module scope..."></textarea>
+            </div>
+            <div>
+              <label class="form-label" for="form-blockers">Current Blockers</label>
+              <textarea id="form-blockers" class="form-input" rows="2" placeholder="Any current blockers..."></textarea>
+            </div>
+            <div>
+              <label class="form-label" for="form-last-action">IT Cell Last Action</label>
+              <textarea id="form-last-action" class="form-input" rows="2" placeholder="Last action taken..."></textarea>
+            </div>
+            <div class="md:col-span-2 flex gap-3 pt-2">
+              <button type="submit" id="module-submit-btn" class="btn-primary">
+                <span id="module-submit-text">Add Module</span>
+                <span id="module-submit-spinner" class="spinner spinner-sm hidden"></span>
+              </button>
+              <button type="button" id="module-reset-btn" class="btn-secondary">Reset</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ── UAT Image Upload ── -->
+        <div class="glass-card p-6">
+          <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span>📸</span> Upload UAT Image
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="upload-module-select">Select Module</label>
+              <select id="upload-module-select" class="form-input">
+                <option value="">-- Select Module --</option>
+                <!-- Populated by JS -->
+              </select>
+            </div>
+            <div>
+              <label class="form-label">UAT Screenshot</label>
+              <div id="upload-drop-zone" class="drop-zone">
+                <input type="file" id="upload-file-input" accept="image/*">
+                <p class="text-sm">📁 Click or drag image here</p>
+                <img id="upload-preview" class="upload-preview hidden mx-auto" alt="Preview">
+              </div>
+            </div>
+            <div class="md:col-span-2 flex items-center gap-4">
+              <button id="upload-btn" class="btn-primary" disabled>
+                <span id="upload-btn-text">Upload Image</span>
+                <span id="upload-btn-spinner" class="spinner spinner-sm hidden"></span>
+              </button>
+              <div id="upload-progress" class="hidden flex items-center gap-2 text-sm text-slate-400">
+                <div class="spinner spinner-sm"></div>
+                <span>Uploading to Google Drive...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Payment Status Update ── -->
+        <div class="glass-card p-6">
+          <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <span>💳</span> Update Payment Status
+          </h4>
+          <form id="payment-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div>
+              <label class="form-label" for="payment-milestone-select">Milestone</label>
+              <select id="payment-milestone-select" class="form-input">
+                <option value="">-- Select Milestone --</option>
+                <!-- Populated by JS -->
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="payment-status-select">New Status</label>
+              <select id="payment-status-select" class="form-input">
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+                <option value="Partial">Partial</option>
+              </select>
+            </div>
+            <div>
+              <button type="submit" id="payment-submit-btn" class="btn-primary w-full">Update Payment</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FOOTER                                                 -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <footer class="py-8 text-center text-xs text-slate-500 relative z-10">
+    <p>Agristack Dashboard &copy; 2026 | Digital Agriculture Division</p>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- TOAST CONTAINER                                        -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="toast-container"></div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- LOADING OVERLAY                                        -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <p class="loading-text">Loading Agristack Dashboard…</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SCRIPTS                                                -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
