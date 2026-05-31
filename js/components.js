@@ -44,8 +44,17 @@ const Components = {
     const uatCompleted = modules.filter(m => String(m.UAT_Status).toLowerCase() === 'completed').length;
     const activeBlockers = modules.filter(m => m.Current_Blockers && String(m.Current_Blockers).trim() !== '').length;
 
-    const totalBudget = payments.reduce((sum, p) => sum + (Number(p.Amount) || 0), 0);
-    const utilizedBudget = payments
+    // CAPEX Calculations
+    const capexPayments = payments.filter(p => String(p.Type || '').toUpperCase() === 'CAPEX');
+    const totalCapex = capexPayments.reduce((sum, p) => sum + (Number(p.Amount) || 0), 0) || 14920000;
+    const utilizedCapex = capexPayments
+      .filter(p => String(p.Payment_Status).toLowerCase() === 'completed')
+      .reduce((sum, p) => sum + (Number(p.Amount) || 0), 0);
+
+    // OPEX Calculations
+    const opexPayments = payments.filter(p => String(p.Type || '').toUpperCase() === 'OPEX');
+    const totalOpex = opexPayments.reduce((sum, p) => sum + (Number(p.Amount) || 0), 0) || 100000000;
+    const utilizedOpex = opexPayments
       .filter(p => String(p.Payment_Status).toLowerCase() === 'completed')
       .reduce((sum, p) => sum + (Number(p.Amount) || 0), 0);
 
@@ -53,7 +62,8 @@ const Components = {
       { icon: '📦', value: totalModules, label: 'Total Modules', color: 'from-teal-500/20 to-teal-600/10' },
       { icon: '✅', value: uatCompleted, label: 'UAT Completed', color: 'from-emerald-500/20 to-emerald-600/10' },
       { icon: '⚠️', value: activeBlockers, label: 'Active Blockers', color: 'from-red-500/20 to-red-600/10' },
-      { icon: '💰', value: this.formatCurrency(utilizedBudget), label: `of ${this.formatCurrency(totalBudget)}`, color: 'from-amber-500/20 to-amber-600/10' }
+      { icon: '🏗️', value: this.formatCurrency(utilizedCapex), label: `CAPEX (of ${this.formatCurrency(totalCapex)})`, color: 'from-teal-500/20 to-teal-600/10' },
+      { icon: '⚙️', value: this.formatCurrency(utilizedOpex), label: `OPEX (of ${this.formatCurrency(totalOpex)})`, color: 'from-amber-500/20 to-amber-600/10' }
     ];
 
     return stats.map((s, i) => `
@@ -83,12 +93,18 @@ const Components = {
       const isCompleted = status.toLowerCase() === 'completed';
       const progressWidth = isCompleted ? 100 : (status.toLowerCase() === 'partial' ? 50 : 0);
       const progressColor = isCompleted ? 'bg-emerald-500' : (status.toLowerCase() === 'partial' ? 'bg-amber-500' : 'bg-slate-600');
+      
+      const isCapex = String(p.Type || '').toUpperCase() === 'CAPEX';
+      const typeBadgeHtml = `<span class="text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full ${isCapex ? 'bg-teal-500/10 text-teal-300 border border-teal-500/25' : 'bg-amber-500/10 text-amber-300 border border-amber-500/25'}">${p.Type || 'CAPEX'}</span>`;
 
       return `
         <div class="glass-card p-4 animate-fade-in-up">
           <div class="text-sm font-semibold text-white mb-1 leading-tight">${p.Milestone_Name}</div>
           <div class="text-lg font-bold text-teal-400 mb-2">${this.formatCurrency(amount)}</div>
-          <span class="status-badge status-${statusCls}">${status}</span>
+          <div class="flex items-center gap-2">
+            <span class="status-badge status-${statusCls}">${status}</span>
+            ${typeBadgeHtml}
+          </div>
           <div class="progress-bar-track mt-3">
             <div class="progress-bar-fill ${progressColor}" style="width: ${progressWidth}%"></div>
           </div>

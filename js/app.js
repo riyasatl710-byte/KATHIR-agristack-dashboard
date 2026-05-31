@@ -152,11 +152,11 @@ const App = {
         }
       ],
       payments: [
-        { Milestone_Name: 'MoU Signed', Amount: 0, Payment_Status: 'Completed' },
-        { Milestone_Name: 'CAPEX 50:50 GoK/NABCONS', Amount: 15000000, Payment_Status: 'Pending' },
-        { Milestone_Name: 'OPEX Phase 1', Amount: 8000000, Payment_Status: 'Pending' },
-        { Milestone_Name: 'OPEX Phase 2', Amount: 12000000, Payment_Status: 'Pending' },
-        { Milestone_Name: 'UAT Completion Milestone', Amount: 5000000, Payment_Status: 'Pending' }
+        { Milestone_Name: 'MoU Signed', Amount: 0, Payment_Status: 'Completed', Type: 'CAPEX' },
+        { Milestone_Name: 'CAPEX 50:50 GoK/NABCONS', Amount: 14920000, Payment_Status: 'Pending', Type: 'CAPEX' },
+        { Milestone_Name: 'OPEX Phase 1', Amount: 8000000, Payment_Status: 'Pending', Type: 'OPEX' },
+        { Milestone_Name: 'OPEX Phase 2', Amount: 12000000, Payment_Status: 'Pending', Type: 'OPEX' },
+        { Milestone_Name: 'OPEX Remaining (5 Years)', Amount: 80000000, Payment_Status: 'Pending', Type: 'OPEX' }
       ]
     };
   },
@@ -555,7 +555,8 @@ const App = {
     const paymentData = {
       Milestone_Name: document.getElementById('add-payment-name').value.trim(),
       Amount: Number(document.getElementById('add-payment-amount').value) || 0,
-      Payment_Status: document.getElementById('add-payment-status').value
+      Payment_Status: document.getElementById('add-payment-status').value,
+      Type: document.getElementById('add-payment-type').value
     };
 
     if (!paymentData.Milestone_Name) {

@@ -72,7 +72,7 @@
     </div>
 
     <!-- Stat Cards -->
-    <div id="stats-container" class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div id="stats-container" class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-5 gap-4">
       <!-- Populated by JS -->
     </div>
   </header>
@@ -263,7 +263,7 @@
           <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
             <span>➕</span> Add Payment Milestone
           </h4>
-          <form id="add-payment-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <form id="add-payment-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
               <label class="form-label" for="add-payment-name">Milestone Name *</label>
               <input id="add-payment-name" class="form-input" placeholder="e.g., OPEX Phase 3" required>
@@ -273,6 +273,13 @@
               <input id="add-payment-amount" type="number" class="form-input" placeholder="e.g., 5000000" required>
             </div>
             <div>
+              <label class="form-label" for="add-payment-type">Type</label>
+              <select id="add-payment-type" class="form-input">
+                <option value="CAPEX">CAPEX</option>
+                <option value="OPEX">OPEX</option>
+              </select>
+            </div>
+            <div>
               <label class="form-label" for="add-payment-status">Payment Status</label>
               <select id="add-payment-status" class="form-input">
                 <option value="Pending">Pending</option>
@@ -280,7 +287,7 @@
                 <option value="Partial">Partial</option>
               </select>
             </div>
-            <div class="md:col-span-3 flex gap-3 pt-2">
+            <div class="md:col-span-4 flex gap-3 pt-2">
               <button type="submit" id="add-payment-submit-btn" class="btn-primary">
                 <span id="add-payment-submit-text">Add Milestone</span>
                 <span id="add-payment-submit-spinner" class="spinner spinner-sm hidden"></span>

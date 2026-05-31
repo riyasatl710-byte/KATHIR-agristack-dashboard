@@ -32,15 +32,16 @@ var MODULES_HEADERS = [
 var PAYMENTS_HEADERS = [
   'Milestone_Name',
   'Amount',
-  'Payment_Status'
+  'Payment_Status',
+  'Type'
 ];
 
 var PAYMENTS_SEED = [
-  ['MoU Signed',                   0,        'Completed'],
-  ['CAPEX 50:50 GoK/NABCONS',     15000000,  'Pending'],
-  ['OPEX Phase 1',                 8000000,   'Pending'],
-  ['OPEX Phase 2',                12000000,   'Pending'],
-  ['UAT Completion Milestone',     5000000,   'Pending']
+  ['MoU Signed',                   0,         'Completed', 'CAPEX'],
+  ['CAPEX 50:50 GoK/NABCONS',     14920000,  'Pending',   'CAPEX'],
+  ['OPEX Phase 1',                 8000000,   'Pending',   'OPEX'],
+  ['OPEX Phase 2',                12000000,   'Pending',   'OPEX'],
+  ['OPEX Remaining (5 Years)',    80000000,   'Pending',   'OPEX']
 ];
 
 // ──────────────────────────────────────────────
@@ -293,7 +294,8 @@ function handleAddPayment_(payload) {
   var newRow = [
     payload.Milestone_Name || '',
     Number(payload.Amount) || 0,
-    payload.Payment_Status || 'Pending'
+    payload.Payment_Status || 'Pending',
+    payload.Type           || 'CAPEX'
   ];
 
   sheet.appendRow(newRow);
