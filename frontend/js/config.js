@@ -1,5 +1,5 @@
 const CONFIG = {
-  APPS_SCRIPT_URL: 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE',
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbziKY4IrJg9d1iinQP0LbHctpetXTQlr1GOYIEw6APhAjqI4NfFLNdcv9JD6OsmYkHjEQ/exec',
   ADMIN_PASSWORD: 'agristack2026',
   MODULE_TYPES: {
     'Core': { color: '#14B8A6', icon: '🏗️' },
